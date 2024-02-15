@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs"
 import User from "../models/user.model.js"
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
 	try {
 		const { username, email, password } = req.body
 
@@ -23,13 +23,6 @@ export const signup = async (req, res) => {
 
 		res.status(201).json("User created")
 	} catch (error) {
-		console.error("Error during signup:", error)
-
-		if (error.code === 11000) {
-			// Unique constraint violation (duplicate key)
-			return res.status(400).json({ error: "Username or email already exists" })
-		}
-
-		res.status(500).json({ error: "Internal Server Error" })
+		next(error)
 	}
 }
